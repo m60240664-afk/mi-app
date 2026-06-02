@@ -14,7 +14,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Setup Node.js
@@ -42,8 +42,7 @@ jobs:
           npx cap add android
           npx cap copy android
           cd android
-          rm -rf ~/.gradle/caches
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
