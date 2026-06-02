@@ -11,10 +11,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: Mover archivos a carpeta www
         run: |
@@ -33,16 +42,8 @@ jobs:
           npx cap add android
           npx cap copy android
           cd android
-          ./gradlew assembleDebug
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+          rm -rf ~/.gradle/caches
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
