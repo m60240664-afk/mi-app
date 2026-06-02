@@ -16,10 +16,24 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Mover archivos a carpeta www
+        run: |
+          mkdir -p www
+          cp index.html www/
+          cp manifest.json www/
+
       - name: Install Capacitor
         run: |
           npm init -y
           npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: Build APK
+        run: |
+          npx cap init "MiApp" "com.miapp.app" --web-dir www
+          npx cap add android
+          npx cap copy android
+          cd android
+          ./gradlew assembleDebug
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -29,13 +43,6 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Build APK
-        run: |
-          npx cap init "MiApp" "com.miapp.app" --web-dir .
-          npx cap add android
-          cd android
-          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
